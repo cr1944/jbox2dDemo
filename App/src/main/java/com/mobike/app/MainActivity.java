@@ -64,13 +64,15 @@ public class MainActivity extends AppCompatActivity {
         btnLeft1.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                mobikeView.getBallList().get(mobikeView.getBallList().size() - 1).setAddLeft(10);
+                mobikeView.getmMobike().move(1);
+                //mobikeView.getBallList().get(mobikeView.getBallList().size() - 1).setAddLeft(10);
             }
         });
         btnLeft2.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                mobikeView.getBallList().get(mobikeView.getBallList().size() - 1).setAddLeft(-10);
+                mobikeView.getmMobike().move(-1);
+                //mobikeView.getBallList().get(mobikeView.getBallList().size() - 1).setAddLeft(-10);
             }
         });
         btnRight1.setOnClickListener(new OnClickListener() {

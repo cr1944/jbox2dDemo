@@ -222,6 +222,12 @@ public class Mobike {
         }
     }
 
+    public void move(float y) {
+        Vec2 newPosition = bottomBody.getWorldCenter();
+        newPosition.y += pixelsToMeters(y);
+        bottomBody.setTransform(newPosition, bottomBody.getAngle());
+    }
+
     public void moveRight(Ball ball, float y) {
         Body body = ball.getBody();
         if(body != null){
