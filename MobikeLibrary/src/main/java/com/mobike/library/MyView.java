@@ -41,7 +41,9 @@ public class MyView extends View {
   private boolean enable = true;
   private Body leftHand, rightHand;
   private Body stick;
+  private Body ball;
   private int stickWidth, stickHeight;
+  private int ballRadius;
   private Paint paint;
 
   public MyView(Context context) {
@@ -64,6 +66,7 @@ public class MyView extends View {
     handDistance = dp2px(context, 200);
     stickHeight = dp2px(context, 10);
     stickWidth = dp2px(context, 300);
+    ballRadius = dp2px(context, 8);
     paint = new Paint();
     paint.setAntiAlias(true);
   }
@@ -76,6 +79,7 @@ public class MyView extends View {
       createLeftAndRightBounds();
       createHand();
       createStick();
+      createBall();
     }
   }
 
@@ -156,7 +160,22 @@ public class MyView extends View {
     bodyDef.position.set(pixelsToMeters(width / 2), pixelsToMeters(height - handRadius * 2 - stickHeight * 2));
     stick = world.createBody(bodyDef);
     stick.createFixture(fixtureDef);
-    stick.setLinearVelocity(new Vec2(0, 0.5f));
+    //stick.setLinearVelocity(new Vec2(0, 0.5f));
+  }
+
+  private void createBall() {
+    BodyDef bodyDef = new BodyDef();
+    bodyDef.type = BodyType.DYNAMIC;
+    CircleShape box = createCircleShape(pixelsToMeters(ballRadius));
+    FixtureDef fixtureDef = new FixtureDef();
+    fixtureDef.shape = box;
+    fixtureDef.density = density;
+    fixtureDef.friction = friction;
+    fixtureDef.restitution = restitution;
+    bodyDef.position.set(pixelsToMeters(width / 2), pixelsToMeters(height - handRadius * 2 - stickHeight * 4));
+    ball = world.createBody(bodyDef);
+    ball.createFixture(fixtureDef);
+    //stick.setLinearVelocity(new Vec2(0, 0.5f));
   }
 
   private CircleShape createCircleShape(float radius) {
@@ -205,16 +224,16 @@ public class MyView extends View {
     world.step(dt, velocityIterations, positionIterations);
     float left_cx = metersToPixels(leftHand.getPosition().x);
     float left_cy = metersToPixels(leftHand.getPosition().y);
-    CircleShape left_shape = (CircleShape) leftHand.getFixtureList().getShape();
-    float left_radius = metersToPixels(left_shape.getRadius());
     paint.setColor(0xffff0000);
-    canvas.drawCircle(left_cx, left_cy, left_radius, paint);
+    canvas.drawCircle(left_cx, left_cy, handRadius, paint);
     float right_cx = metersToPixels(rightHand.getPosition().x);
     float right_cy = metersToPixels(rightHand.getPosition().y);
-    CircleShape right_shape = (CircleShape) rightHand.getFixtureList().getShape();
-    float right_radius = metersToPixels(right_shape.getRadius());
     paint.setColor(0xff00ff00);
-    canvas.drawCircle(right_cx, right_cy, right_radius, paint);
+    canvas.drawCircle(right_cx, right_cy, handRadius, paint);
+    float ball_cx = metersToPixels(ball.getPosition().x);
+    float ball_cy = metersToPixels(ball.getPosition().y);
+    paint.setColor(0xff00fff0);
+    canvas.drawCircle(ball_cx, ball_cy, ballRadius, paint);
     canvas.save();
     float stick_left = metersToPixels(stick.getPosition().x) - stickWidth / 2;
     float stick_top = metersToPixels(stick.getPosition().y) - stickHeight / 2;
